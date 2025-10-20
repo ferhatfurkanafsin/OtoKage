@@ -71,21 +71,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.close, color: Colors.black, size: 20),
-                      onPressed: () {
-                        // Close action if needed
-                      },
-                      padding: EdgeInsets.zero,
-                    ),
-                  ),
                 ],
               ),
               
