@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import '../generated/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import '../services/audio_service.dart';
 import '../services/api_service.dart';
 import 'result_screen.dart';

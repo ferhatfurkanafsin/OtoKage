@@ -8,7 +8,13 @@
       "Bash(flutter build:*)",
       "Bash(cat:*)",
       "Bash(git remote set-url:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nTransform to OtoKage: Complete anime music finder rebrand\n\nMajor Changes:\n- Rebrand from VibeQuest to OtoKage (音影 - Sound Shadow)\n- Add Japanese language support (EN/TR/JP)\n- Implement language switcher UI in top-right corner\n- Fix critical navigation crash bug (missing /result route)\n- Enhance anime-focused theme (softer Sakura Pink #FF6B9D)\n- Update all branding across Android/iOS platforms\n- Add comprehensive documentation (guides & rollback info)\n- Generate new launcher icons with OtoKage branding\n\nFrontend Changes:\n- Fix app crash: Added route definition for /result navigation\n- Language Service: Provider-based language management with SharedPreferences\n- Home Screen: Added language switcher button (top-right)\n- Localization: Complete EN/TR/JP translations\n- Theme: Updated to Sakura Pink secondary color, added Electric Purple\n- Main: Provider integration for language switching\n\nNew Files:\n- frontend/lib/services/language_service.dart - Language management\n- frontend/lib/l10n/app_ja.arb - Japanese translations\n- frontend/assets/otokage_icon.png - App icon\n- CURRENT_STATE.md - Pre-transformation snapshot\n- ICON_DESIGN_GUIDE.md - Icon design specifications\n- TRANSFORMATION_SUMMARY.md - Complete change log\n- OTOKAGE_README.md - User guide\n\nBuild Info:\n- Version: 1.0.0+1\n- Package: com.vibequest.app\n- APK Size: ~46 MB\n- Supports: Android 5.0+ (API 21+)\n\n🤖 Generated with Claude Code\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git push:*)",
+      "Bash(flutter analyze:*)",
+      "Bash(flutter doctor:*)",
+      "Bash(find:*)",
+      "Bash(flutter clean:*)"
     ],
     "deny": [],
     "ask": []

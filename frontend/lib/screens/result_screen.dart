@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../generated/app_localizations.dart';
+import '../l10n/app_localizations.dart';
 import '../services/api_service.dart';
 import '../models/song_model.dart';
 
