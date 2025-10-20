@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../generated/app_localizations.dart';
+import 'dart:math' as math;
 import 'recording_screen.dart';
 import '../services/api_service.dart';
 
@@ -279,7 +280,7 @@ class _AnimatedEqualizerState extends State<_AnimatedEqualizer>
             builder: (_, __) {
               final t = _controller.value;
               final h = (0.4 + 0.6 * (0.5 + 0.5 *
-                  (MathUtils.sin(2 * 3.1415 * t + phase)))) * 50;
+                  (math.sin(2 * math.pi * t + phase)))) * 50;
               return Container(
                 width: 8,
                 height: h,
@@ -293,22 +294,6 @@ class _AnimatedEqualizerState extends State<_AnimatedEqualizer>
         }),
       ),
     );
-  }
-}
-
-class MathUtils {
-  static double sin(double x) => MathUtils._tableSin(x);
-
-  // Simple sine using Dart's math would be ideal, but avoiding import churn
-  // by delegating to dart:math-like approximation here.
-  static double _tableSin(double x) {
-    // Normalize to [-pi, pi]
-    const double pi = 3.1415926535897932;
-    while (x > pi) x -= 2 * pi;
-    while (x < -pi) x += 2 * pi;
-    // Use a 5th-order Taylor approximation around 0 for simplicity
-    final x2 = x * x;
-    return x * (1 - x2 / 6 + x2 * x2 / 120);
   }
 }
 
