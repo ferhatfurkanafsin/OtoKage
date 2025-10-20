@@ -14,7 +14,10 @@
       "Bash(flutter analyze:*)",
       "Bash(flutter doctor:*)",
       "Bash(find:*)",
-      "Bash(flutter clean:*)"
+      "Bash(flutter clean:*)",
+      "Bash(git commit:*)",
+      "Bash(tree:*)",
+      "Bash(ls:*)"
     ],
     "deny": [],
     "ask": []

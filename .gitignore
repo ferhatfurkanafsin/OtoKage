@@ -7,3 +7,16 @@ __pycache__/
 *.log
 .vscode/
 .idea/
+
+# Backend specific
+backend/.env
+backend/venv/
+backend/__pycache__/
+backend/**/*.pyc
+backend/**/__pycache__/
+
+# Flutter/Dart build artifacts
+frontend/build/
+frontend/.dart_tool/
+frontend/.flutter-plugins
+frontend/.flutter-plugins-dependencies
