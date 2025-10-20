@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import '../generated/app_localizations.dart';
 import 'dart:math' as math;
-import 'recording_screen.dart';
 import '../services/api_service.dart';
+import '../services/audio_service.dart';
+import '../services/language_service.dart';
+import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -14,13 +17,80 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ApiService _apiService = ApiService();
+  final AudioService _audioService = AudioService();
   bool _isConnected = false;
   bool _isChecking = true;
+  bool _isRecording = false;
+  bool _isProcessing = false;
+  int _recordingSeconds = 0;
+  Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _checkConnection();
+  }
+  @override
+  void dispose() {
+    _timer?.cancel();
+    _audioService.dispose();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _recordingSeconds = 0;
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+      setState(() => _recordingSeconds++);
+    });
+  }
+
+  void _stopTimer() {
+    _timer?.cancel();
+  }
+
+  Future<void> _toggleRecording() async {
+    if (_isRecording) {
+      await _stopRecording();
+    } else {
+      await _startRecording();
+    }
+  }
+
+  Future<void> _startRecording() async {
+    final ok = await _audioService.startRecording();
+    if (!ok) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to start recording. Please check permissions.')),
+        );
+      }
+      return;
+    }
+    setState(() => _isRecording = true);
+    _startTimer();
+  }
+
+  Future<void> _stopRecording() async {
+    _stopTimer();
+    final path = await _audioService.stopRecording();
+    if (path == null) {
+      setState(() => _isRecording = false);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Recording failed. Please try again.')),
+        );
+      }
+      return;
+    }
+    setState(() {
+      _isRecording = false;
+      _isProcessing = true;
+    });
+    final result = await _apiService.recognizeAudio(path);
+    setState(() => _isProcessing = false);
+    if (!mounted) return;
+    // Navigate to result screen as before
+    Navigator.pushReplacementNamed(context, '/result', arguments: result);
   }
 
   Future<void> _checkConnection() async {
@@ -44,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(24.0),
           child: Column(
             children: [
-              // Top Bar with App Name and Close Button
+              // Top Bar with App Name and Language Switcher
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -71,6 +141,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
+                  _LanguageSwitcher(),
                 ],
               ),
               
@@ -85,7 +156,9 @@ class _HomeScreenState extends State<HomeScreen> {
                     
                     // Main Text
                     Text(
-                      AppLocalizations.of(context)!.homeTapToIdentify,
+                      _isProcessing
+                          ? AppLocalizations.of(context)!.recognizing
+                          : AppLocalizations.of(context)!.homeTapToIdentify,
                       style: GoogleFonts.plusJakartaSans(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -94,6 +167,14 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
+                    if (_isRecording)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 12.0),
+                        child: Text(
+                          '${(_recordingSeconds ~/ 60).toString().padLeft(2, '0')}:${(_recordingSeconds % 60).toString().padLeft(2, '0')}',
+                          style: const TextStyle(color: Colors.white70),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -150,16 +231,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildListeningHero() {
     return GestureDetector(
-      onTap: () {
-        if (_isConnected) {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const RecordingScreen(),
-            ),
-          );
-        }
-      },
+      onTap: _isConnected && !_isProcessing ? _toggleRecording : null,
       child: Stack(
         alignment: Alignment.center,
         children: [
@@ -199,8 +271,8 @@ class _HomeScreenState extends State<HomeScreen> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  Color(0xFF00E5FF), // neon aqua
-                  Color(0xFFFF2FB9), // hot magenta
+                  Color(0xFF00E5FF), // Neon Cyan
+                  Color(0xFFFF6B9D), // Sakura Pink
                 ],
               ),
               boxShadow: [
@@ -210,7 +282,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   spreadRadius: 10,
                 ),
                 BoxShadow(
-                  color: const Color(0xFFFF2FB9).withOpacity(0.25),
+                  color: const Color(0xFFFF6B9D).withOpacity(0.3),
                   blurRadius: 60,
                   spreadRadius: 12,
                 ),
@@ -220,6 +292,12 @@ class _HomeScreenState extends State<HomeScreen> {
               child: _AnimatedEqualizer(),
             ),
           ),
+          if (_isProcessing)
+            const Positioned.fill(
+              child: Center(
+                child: CircularProgressIndicator(color: Colors.white),
+              ),
+            ),
         ],
       ),
     );
@@ -309,4 +387,103 @@ class _ScanlinesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+}
+
+class _LanguageSwitcher extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final languageService = Provider.of<LanguageService>(context);
+    final currentLang = languageService.currentLocale.languageCode;
+
+    return PopupMenuButton<String>(
+      icon: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: const Color(0xFF00E5FF).withOpacity(0.15),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(
+            color: const Color(0xFF00E5FF).withOpacity(0.5),
+            width: 1,
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              languageService.getLanguageFlag(currentLang),
+              style: const TextStyle(fontSize: 16),
+            ),
+            const SizedBox(width: 6),
+            Text(
+              currentLang.toUpperCase(),
+              style: GoogleFonts.plusJakartaSans(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: const Color(0xFF00E5FF),
+                letterSpacing: 0.5,
+              ),
+            ),
+            const SizedBox(width: 4),
+            const Icon(
+              Icons.arrow_drop_down,
+              color: Color(0xFF00E5FF),
+              size: 18,
+            ),
+          ],
+        ),
+      ),
+      color: const Color(0xFF1A1F2E),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+        side: BorderSide(
+          color: const Color(0xFF00E5FF).withOpacity(0.3),
+          width: 1,
+        ),
+      ),
+      itemBuilder: (context) => [
+        _buildLanguageMenuItem('en', languageService),
+        _buildLanguageMenuItem('tr', languageService),
+        _buildLanguageMenuItem('ja', languageService),
+      ],
+      onSelected: (languageCode) {
+        languageService.changeLanguage(languageCode);
+      },
+    );
+  }
+
+  PopupMenuItem<String> _buildLanguageMenuItem(
+    String code,
+    LanguageService languageService,
+  ) {
+    final isSelected = languageService.currentLocale.languageCode == code;
+
+    return PopupMenuItem<String>(
+      value: code,
+      child: Row(
+        children: [
+          Text(
+            languageService.getLanguageFlag(code),
+            style: const TextStyle(fontSize: 20),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            languageService.getLanguageName(code),
+            style: GoogleFonts.plusJakartaSans(
+              fontSize: 14,
+              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+              color: isSelected ? const Color(0xFF00E5FF) : Colors.white,
+            ),
+          ),
+          if (isSelected) ...[
+            const Spacer(),
+            const Icon(
+              Icons.check,
+              color: Color(0xFF00E5FF),
+              size: 18,
+            ),
+          ],
+        ],
+      ),
+    );
+  }
 }

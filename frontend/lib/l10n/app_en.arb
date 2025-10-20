@@ -1,8 +1,8 @@
 {
-  "appTitle": "VibeQuest: Anime & Game OST",
-  "homeTitleShort": "VibeQuest",
-  "homeTagline": "Anime • Game OST Finder",
-  "homeTapToIdentify": "Tap to identify OP/ED or Game OST",
+  "appTitle": "OtoKage: Anime Music Finder",
+  "homeTitleShort": "OtoKage",
+  "homeTagline": "Identify Anime OPs, EDs & Game OSTs",
+  "homeTapToIdentify": "Tap to identify Anime OP/ED or Game OST",
   "cannotConnect": "Cannot connect to server",
   "retry": "Retry",
   "recordHeader": "Record your OP/OST",

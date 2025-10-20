@@ -1,8 +1,8 @@
 {
-  "appTitle": "VibeQuest: Anime ve Oyun OST",
-  "homeTitleShort": "VibeQuest",
-  "homeTagline": "Anime • Oyun OST Bulucu",
-  "homeTapToIdentify": "OP/ED veya Oyun OST'sini tanımlamak için dokunun",
+  "appTitle": "OtoKage: Anime Müzik Bulucu",
+  "homeTitleShort": "OtoKage",
+  "homeTagline": "Anime OP, ED ve Oyun Müziklerini Tanı",
+  "homeTapToIdentify": "Anime OP/ED veya Oyun OST'sini tanımlamak için dokunun",
   "cannotConnect": "Sunucuya bağlanılamıyor",
   "retry": "Tekrar dene",
   "recordHeader": "OP/OST kaydedin",

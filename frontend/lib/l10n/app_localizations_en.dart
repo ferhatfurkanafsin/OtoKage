@@ -9,16 +9,16 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get appTitle => 'VibeQuest: Anime & Game OST';
+  String get appTitle => 'OtoKage: Anime Music Finder';
 
   @override
-  String get homeTitleShort => 'VibeQuest';
+  String get homeTitleShort => 'OtoKage';
 
   @override
-  String get homeTagline => 'Anime • Game OST Finder';
+  String get homeTagline => 'Identify Anime OPs, EDs & Game OSTs';
 
   @override
-  String get homeTapToIdentify => 'Tap to identify OP/ED or Game OST';
+  String get homeTapToIdentify => 'Tap to identify Anime OP/ED or Game OST';
 
   @override
   String get cannotConnect => 'Cannot connect to server';

@@ -1,5 +1,5 @@
 name: frontend
-description: "VibeQuest: Anime & Game OST Finder"
+description: "OtoKage: Anime Music Recognition"
 publish_to: 'none'
 version: 1.0.0+1
 
@@ -32,6 +32,8 @@ dependencies:
   
   # Google Fonts
   google_fonts: ^6.1.0
+  google_sign_in: ^6.2.1
+  shared_preferences: ^2.2.2
 
 dependency_overrides:
   record_linux: ^1.0.0
@@ -58,10 +60,11 @@ flutter_native_splash:
   ios: true
   web: true
 
-flutter_icons:
+flutter_launcher_icons:
   android: true
   ios: true
   adaptive_icon_background: "#00E5FF"
+  adaptive_icon_foreground: "assets/otokage_icon.png"
   background_color_ios: "#0B0D14"
-  image_path: "assets/vibequest_icon.png"
+  image_path: "assets/otokage_icon.png"
   min_sdk_android: 21

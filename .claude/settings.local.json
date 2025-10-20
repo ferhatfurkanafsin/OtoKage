@@ -1,0 +1,16 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git -C /Users/ferhatfurkanafsin/Documents/CodingNotes/vgm-music-recognition log --oneline -20)",
+      "Bash(flutter gen-l10n:*)",
+      "Bash(flutter pub run:*)",
+      "Bash(flutter pub get:*)",
+      "Bash(flutter build:*)",
+      "Bash(cat:*)",
+      "Bash(git remote set-url:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

@@ -9,16 +9,16 @@ class AppLocalizationsTr extends AppLocalizations {
   AppLocalizationsTr([String locale = 'tr']) : super(locale);
 
   @override
-  String get appTitle => 'VibeQuest: Anime ve Oyun OST';
+  String get appTitle => 'OtoKage: Anime Müzik Bulucu';
 
   @override
-  String get homeTitleShort => 'VibeQuest';
+  String get homeTitleShort => 'OtoKage';
 
   @override
-  String get homeTagline => 'Anime • Oyun OST Bulucu';
+  String get homeTagline => 'Anime OP, ED ve Oyun Müziklerini Tanı';
 
   @override
-  String get homeTapToIdentify => 'OP/ED veya Oyun OST\'sini tanımlamak için dokunun';
+  String get homeTapToIdentify => 'Anime OP/ED veya Oyun OST\'sini tanımlamak için dokunun';
 
   @override
   String get cannotConnect => 'Sunucuya bağlanılamıyor';

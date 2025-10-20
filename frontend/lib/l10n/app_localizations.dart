@@ -6,6 +6,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_ja.dart';
 import 'app_localizations_tr.dart';
 
 // ignore_for_file: type=lint
@@ -92,31 +93,32 @@ abstract class AppLocalizations {
   /// A list of this localizations delegate's supported locales.
   static const List<Locale> supportedLocales = <Locale>[
     Locale('en'),
+    Locale('ja'),
     Locale('tr')
   ];
 
   /// No description provided for @appTitle.
   ///
   /// In en, this message translates to:
-  /// **'VibeQuest: Anime & Game OST'**
+  /// **'OtoKage: Anime Music Finder'**
   String get appTitle;
 
   /// No description provided for @homeTitleShort.
   ///
   /// In en, this message translates to:
-  /// **'VibeQuest'**
+  /// **'OtoKage'**
   String get homeTitleShort;
 
   /// No description provided for @homeTagline.
   ///
   /// In en, this message translates to:
-  /// **'Anime • Game OST Finder'**
+  /// **'Identify Anime OPs, EDs & Game OSTs'**
   String get homeTagline;
 
   /// No description provided for @homeTapToIdentify.
   ///
   /// In en, this message translates to:
-  /// **'Tap to identify OP/ED or Game OST'**
+  /// **'Tap to identify Anime OP/ED or Game OST'**
   String get homeTapToIdentify;
 
   /// No description provided for @cannotConnect.
@@ -243,7 +245,7 @@ class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['en', 'tr'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['en', 'ja', 'tr'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -255,6 +257,7 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   // Lookup logic when only language code is specified.
   switch (locale.languageCode) {
     case 'en': return AppLocalizationsEn();
+    case 'ja': return AppLocalizationsJa();
     case 'tr': return AppLocalizationsTr();
   }
 
