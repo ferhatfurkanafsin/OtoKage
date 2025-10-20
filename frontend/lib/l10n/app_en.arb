@@ -1,0 +1,26 @@
+{
+  "appTitle": "VibeQuest: Anime & Game OST",
+  "homeTitleShort": "VibeQuest",
+  "homeTagline": "Anime • Game OST Finder",
+  "homeTapToIdentify": "Tap to identify OP/ED or Game OST",
+  "cannotConnect": "Cannot connect to server",
+  "retry": "Retry",
+  "recordHeader": "Record your OP/OST",
+  "recognizing": "Recognizing...",
+  "recognizingHint": "Please wait while we identify your song",
+  "recording": "Recording… aim for 10–15 seconds",
+  "tapToStart": "Tap to start; hum OP/ED or game theme",
+  "minRecordingHint": "Hum or sing the melody for at least 10 seconds",
+  "resultHeader": "Match",
+  "songFound": "OST Found!",
+  "listenOn": "Listen on:",
+  "tryAnotherSong": "Try Another Song",
+  "noMatchFound": "No Match Found",
+  "tipsHeader": "Tips for better results:",
+  "tip1": "Hum or sing for at least 10–15 seconds",
+  "tip2": "Try to match the melody as closely as possible",
+  "tip3": "Record in a quiet environment",
+  "tip4": "Try a popular anime OP/ED or game theme",
+  "tryAgain": "Try Again"
+}
+

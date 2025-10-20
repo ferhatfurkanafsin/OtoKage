@@ -1,0 +1,26 @@
+{
+  "appTitle": "VibeQuest: Anime ve Oyun OST",
+  "homeTitleShort": "VibeQuest",
+  "homeTagline": "Anime • Oyun OST Bulucu",
+  "homeTapToIdentify": "OP/ED veya Oyun OST'sini tanımlamak için dokunun",
+  "cannotConnect": "Sunucuya bağlanılamıyor",
+  "retry": "Tekrar dene",
+  "recordHeader": "OP/OST kaydedin",
+  "recognizing": "Tanımlanıyor...",
+  "recognizingHint": "Şarkıyı tanımlarken lütfen bekleyin",
+  "recording": "Kaydediliyor… 10–15 saniye hedefleyin",
+  "tapToStart": "Başlamak için dokunun; OP/ED veya oyun temasını mırıldanın",
+  "minRecordingHint": "En az 10 saniye boyunca melodiyi mırıldanın veya söyleyin",
+  "resultHeader": "Eşleşme",
+  "songFound": "OST bulundu!",
+  "listenOn": "Dinle:",
+  "tryAnotherSong": "Başka bir şarkı deneyin",
+  "noMatchFound": "Eşleşme bulunamadı",
+  "tipsHeader": "Daha iyi sonuçlar için ipuçları:",
+  "tip1": "En az 10–15 saniye mırıldanın veya söyleyin",
+  "tip2": "Melodiyi olabildiğince yakından tutturmaya çalışın",
+  "tip3": "Sessiz bir ortamda kaydedin",
+  "tip4": "Popüler bir anime OP/ED veya oyun temasını deneyin",
+  "tryAgain": "Tekrar deneyin"
+}
+
