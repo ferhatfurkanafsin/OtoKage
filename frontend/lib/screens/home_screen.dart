@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import 'dart:math' as math;
 import '../services/api_service.dart';
 import '../services/audio_service.dart';
+import '../services/auth_service.dart';
 import '../services/language_service.dart';
 import 'dart:async';
 
@@ -141,7 +142,22 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  _LanguageSwitcher(),
+                  Row(
+                    children: [
+                      IconButton(
+                        icon: const Icon(Icons.logout, color: Colors.white70),
+                        onPressed: () async {
+                          await AuthService().signOut();
+                          if (context.mounted) {
+                            Navigator.of(context).pushReplacementNamed('/');
+                          }
+                        },
+                        tooltip: 'Sign Out',
+                      ),
+                      const SizedBox(width: 8),
+                      _LanguageSwitcher(),
+                    ],
+                  ),
                 ],
               ),
               

@@ -4,8 +4,10 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'l10n/app_localizations.dart';
 import 'screens/home_screen.dart';
+import 'screens/sign_in_screen.dart';
 import 'screens/result_screen.dart';
 import 'services/api_service.dart';
+import 'services/auth_service.dart';
 import 'services/language_service.dart';
 
 void main() async {
@@ -51,7 +53,7 @@ class MyApp extends StatelessWidget {
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
                   elevation: 8,
-                  shadowColor: const Color(0xFF00E5FF).withOpacity(0.3),
+                  shadowColor: const Color(0xFF00E5FF).withValues(alpha: 0.3),
                 ),
               ),
             ),
@@ -66,7 +68,7 @@ class MyApp extends StatelessWidget {
               Locale('tr'),
               Locale('ja'),
             ],
-            home: const HomeScreen(),
+            home: const AuthGate(),
             onGenerateRoute: (settings) {
               if (settings.name == '/result') {
                 final result = settings.arguments as RecognitionResult;
@@ -79,6 +81,32 @@ class MyApp extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+/// AuthGate checks if user is signed in and shows appropriate screen
+class AuthGate extends StatelessWidget {
+  const AuthGate({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: AuthService().isSignedIn(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(
+                color: Color(0xFF00E5FF),
+              ),
+            ),
+          );
+        }
+
+        final isSignedIn = snapshot.data ?? false;
+        return isSignedIn ? const HomeScreen() : const SignInScreen();
+      },
     );
   }
 }

@@ -17,7 +17,15 @@
       "Bash(flutter clean:*)",
       "Bash(git commit:*)",
       "Bash(tree:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Read(//Users/ferhatfurkanafsin/Desktop/**)",
+      "Bash(rm:*)",
+      "Bash(git restore:*)",
+      "Bash(git -C /Users/ferhatfurkanafsin/Documents/CodingNotes/Otokage status)",
+      "Bash(git -C /Users/ferhatfurkanafsin/Documents/CodingNotes/Otokage add backend/ render.yaml DEPLOYMENT_GUIDE.md)",
+      "Bash(git -C /Users/ferhatfurkanafsin/Documents/CodingNotes/Otokage add:*)",
+      "Bash(git -C /Users/ferhatfurkanafsin/Documents/CodingNotes/Otokage rm --cached backend)",
+      "Bash(git -C /Users/ferhatfurkanafsin/Documents/CodingNotes/Otokage status --short)"
     ],
     "deny": [],
     "ask": []
