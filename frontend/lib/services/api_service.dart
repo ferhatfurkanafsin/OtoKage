@@ -2,7 +2,7 @@ import 'package:dio/dio.dart';
 import '../models/song_model.dart';
 
 class ApiService {
-  static const String baseUrl = 'https://vgm-music-recognition.onrender.com/api';
+  static const String baseUrl = 'https://otokage-backend.onrender.com/api';
   
   final Dio _dio = Dio(
     BaseOptions(
