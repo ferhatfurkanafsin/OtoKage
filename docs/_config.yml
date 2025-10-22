@@ -1,0 +1,33 @@
+# OtoKage - GitHub Pages Configuration
+# This tells GitHub Pages how to serve our HTML files
+
+# Basic Settings
+title: "OtoKage - Privacy & Legal Documents"
+description: "Privacy Policy, Terms of Service, and Account Deletion for OtoKage Music Recognition App"
+baseurl: "/OtoKage"
+url: "https://ferhatfurkanafsin.github.io"
+
+# Theme
+theme: jekyll-theme-minimal
+
+# Exclude files from processing
+exclude:
+  - README.md
+  - .gitignore
+  - Gemfile
+  - Gemfile.lock
+
+# Include all HTML files
+include:
+  - privacy.html
+  - delete-account.html
+  - terms.html
+  - index.html
+
+# Disable Jekyll's default markdown processing for HTML files
+# This ensures our HTML files are served as-is
+defaults:
+  - scope:
+      path: "*.html"
+    values:
+      layout: none
