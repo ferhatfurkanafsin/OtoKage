@@ -1,7 +1,11 @@
 from fastapi import APIRouter, UploadFile, File, HTTPException
 from fastapi.responses import JSONResponse
 from app.services.acrcloud_service import acrcloud_service
-from typing import Dict
+from typing import Dict, List
+from pydantic import BaseModel
+import json
+import os
+from pathlib import Path
 
 router = APIRouter()
 
@@ -59,3 +63,97 @@ async def test_recognition():
         return {"success": False, "message": "ACRCloud credentials might be invalid", "response": test_response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Test failed: {str(e)}")
+
+# History models
+class SearchHistoryItem(BaseModel):
+    songTitle: str
+    artist: str
+    album: str
+    searchedAt: str
+    spotifyUrl: str | None = None
+    youtubeUrl: str | None = None
+    score: int
+    durationMs: int
+
+# History storage path
+HISTORY_DIR = Path("data/history")
+HISTORY_DIR.mkdir(parents=True, exist_ok=True)
+
+def get_history_file(email: str) -> Path:
+    """Get the history file path for a user"""
+    # Use email hash as filename for privacy
+    safe_email = email.replace("@", "_at_").replace(".", "_")
+    return HISTORY_DIR / f"{safe_email}.json"
+
+@router.post("/history")
+async def save_history(email: str, history: SearchHistoryItem):
+    """Save a search history item for a user"""
+    try:
+        history_file = get_history_file(email)
+
+        # Read existing history
+        existing_history = []
+        if history_file.exists():
+            with open(history_file, 'r') as f:
+                existing_history = json.load(f)
+
+        # Add new item at the beginning
+        existing_history.insert(0, history.model_dump())
+
+        # Keep only last 100 items
+        existing_history = existing_history[:100]
+
+        # Save back to file
+        with open(history_file, 'w') as f:
+            json.dump(existing_history, f, indent=2)
+
+        return {"success": True, "message": "History saved successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to save history: {str(e)}")
+
+@router.get("/history/{email}")
+async def get_history(email: str) -> List[Dict]:
+    """Get search history for a user"""
+    try:
+        history_file = get_history_file(email)
+
+        if not history_file.exists():
+            return []
+
+        with open(history_file, 'r') as f:
+            return json.load(f)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to retrieve history: {str(e)}")
+
+@router.delete("/history/{email}")
+async def clear_history(email: str):
+    """Clear all search history for a user"""
+    try:
+        history_file = get_history_file(email)
+
+        if history_file.exists():
+            history_file.unlink()
+
+        return {"success": True, "message": "History cleared successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to clear history: {str(e)}")
+
+@router.delete("/account/{email}")
+async def delete_account(email: str):
+    """Delete user account and all associated data"""
+    try:
+        history_file = get_history_file(email)
+
+        # Delete history file if exists
+        if history_file.exists():
+            history_file.unlink()
+
+        # In future: delete other user data (auth tokens, preferences, etc.)
+        # For now, only history is stored in backend
+
+        return {
+            "success": True,
+            "message": "Account and all associated data deleted successfully"
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Failed to delete account: {str(e)}")

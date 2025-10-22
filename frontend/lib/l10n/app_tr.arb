@@ -1,8 +1,8 @@
 {
   "appTitle": "OtoKage: Anime Müzik Bulucu",
   "homeTitleShort": "OtoKage",
-  "homeTagline": "Anime OP, ED ve Oyun Müziklerini Tanı",
-  "homeTapToIdentify": "Anime OP/ED veya Oyun OST'sini tanımlamak için dokunun",
+  "homeTagline": "Şarkıyı aramak için dokunun",
+  "homeTapToIdentify": "Şarkıyı aramak için dokunun",
   "cannotConnect": "Sunucuya bağlanılamıyor",
   "retry": "Tekrar dene",
   "recordHeader": "OP/OST kaydedin",
@@ -21,6 +21,49 @@
   "tip2": "Melodiyi olabildiğince yakından tutturmaya çalışın",
   "tip3": "Sessiz bir ortamda kaydedin",
   "tip4": "Popüler bir anime OP/ED veya oyun temasını deneyin",
-  "tryAgain": "Tekrar deneyin"
+  "tryAgain": "Tekrar deneyin",
+  "historyTitle": "Arama Geçmişi",
+  "historyEmpty": "Henüz arama geçmişi yok",
+  "historyEmptyHint": "Tanınan şarkılarınız burada görünecek",
+  "historyClearConfirm": "Geçmişi temizle?",
+  "historyClearMessage": "Bu, tüm arama geçmişinizi silecektir. Bu işlem geri alınamaz.",
+  "historyCancel": "İptal",
+  "historyClear": "Temizle",
+  "historyGuestSync": "Geçmişi tüm cihazlarda kaydetmek için giriş yapın",
+  "historyGuestLocal": "Misafir olarak geçmişiniz yalnızca yerel olarak saklanır",
+  "historyGuestBanner": "Geçmişinizi tüm cihazlarda senkronize etmek için giriş yapın",
+  "continueWithGoogle": "Google ile devam et",
+  "continueWithEmail": "E-posta ile devam et",
+  "continueAsGuest": "Misafir olarak devam et",
+  "matchScore": "Eşleşme: %{score}",
+  "@matchScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "signInFailed": "Giriş başarısız",
+  "email": "E-posta",
+  "password": "Şifre",
+  "settings": "Ayarlar",
+  "account": "Hesap",
+  "profile": "Profil",
+  "guestUser": "Misafir Kullanıcı",
+  "deleteAccount": "Hesabı Sil",
+  "deleteAccountConfirm": "Hesap Silinsin mi?",
+  "deleteAccountWarning": "Bu, hesabınızı ve arama geçmişi dahil tüm ilişkili verileri kalıcı olarak silecektir. Bu işlem geri alınamaz.",
+  "deleteAccountSuccess": "Hesap başarıyla silindi",
+  "deleteAccountFailed": "Hesap silinemedi. Lütfen tekrar deneyin.",
+  "cancel": "İptal",
+  "delete": "Sil",
+  "privacyPolicy": "Gizlilik Politikası",
+  "termsOfService": "Hizmet Şartları",
+  "about": "Hakkında",
+  "version": "Sürüm",
+  "contactUs": "Bize Ulaşın",
+  "accountSettings": "Hesap Ayarları",
+  "privacyAndLegal": "Gizlilik ve Yasal",
+  "signedInAs": "Giriş yapıldı:"
 }
 

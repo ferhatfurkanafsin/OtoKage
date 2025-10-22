@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../l10n/app_localizations.dart';
 import 'dart:math' as math;
 import '../services/api_service.dart';
 import '../services/audio_service.dart';
-import '../services/auth_service.dart';
-import '../services/language_service.dart';
+import '../services/history_service.dart';
+import '../models/history_model.dart';
+import '../widgets/app_drawer.dart';
+import 'history_screen.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
@@ -19,21 +20,41 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   final ApiService _apiService = ApiService();
   final AudioService _audioService = AudioService();
-  bool _isConnected = false;
-  bool _isChecking = true;
+  final HistoryService _historyService = HistoryService();
+  bool _isConnected = true; // Optimistic default
+  bool _isChecking = false;
   bool _isRecording = false;
   bool _isProcessing = false;
   int _recordingSeconds = 0;
   Timer? _timer;
+  Timer? _recognitionTimer;
+  bool _foundMatch = false;
 
   @override
   void initState() {
     super.initState();
-    _checkConnection();
+    // Check connection asynchronously without blocking UI
+    _checkConnectionAsync();
   }
+
+  void _checkConnectionAsync() async {
+    try {
+      await _checkConnection();
+    } catch (e) {
+      // Silently fail - user can still try to use the app
+      if (mounted) {
+        setState(() {
+          _isConnected = false;
+          _isChecking = false;
+        });
+      }
+    }
+  }
+
   @override
   void dispose() {
     _timer?.cancel();
+    _recognitionTimer?.cancel();
     _audioService.dispose();
     super.dispose();
   }
@@ -50,9 +71,8 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> _toggleRecording() async {
-    if (_isRecording) {
-      await _stopRecording();
-    } else {
+    // Only start recording if not already recording or processing
+    if (!_isRecording && !_isProcessing) {
       await _startRecording();
     }
   }
@@ -67,11 +87,84 @@ class _HomeScreenState extends State<HomeScreen> {
       }
       return;
     }
-    setState(() => _isRecording = true);
+    setState(() {
+      _isRecording = true;
+      _foundMatch = false;
+    });
     _startTimer();
+
+    // Try recognition at 5, 10, and 15 seconds
+    // This allows early detection if song is found quickly
+    _scheduleProgressiveRecognition();
   }
 
-  Future<void> _stopRecording() async {
+  void _scheduleProgressiveRecognition() {
+    // Try recognition at 5 seconds
+    Future.delayed(const Duration(seconds: 5), () async {
+      if (_isRecording && !_foundMatch && mounted) {
+        await _tryRecognition();
+      }
+    });
+
+    // Try recognition at 10 seconds if not found yet
+    Future.delayed(const Duration(seconds: 10), () async {
+      if (_isRecording && !_foundMatch && mounted) {
+        await _tryRecognition();
+      }
+    });
+
+    // Final attempt at 15 seconds - stop regardless
+    Future.delayed(const Duration(seconds: 15), () async {
+      if (_isRecording && mounted) {
+        await _stopRecordingAndRecognize();
+      }
+    });
+  }
+
+  Future<void> _tryRecognition() async {
+    if (!_isRecording || _foundMatch) return;
+
+    // Get current audio path without stopping recording
+    final path = await _audioService.stopRecording();
+    if (path == null) return;
+
+    // Immediately restart recording to continue
+    final restartOk = await _audioService.startRecording();
+    if (!restartOk) {
+      return;
+    }
+
+    // Try recognition in background
+    setState(() => _isProcessing = true);
+    final result = await _apiService.recognizeAudio(path);
+
+    if (!mounted) return;
+
+    // If match found, stop recording and show result
+    if (result.success) {
+      _foundMatch = true;
+      await _audioService.stopRecording();
+      setState(() {
+        _isRecording = false;
+        _isProcessing = false;
+      });
+      _stopTimer();
+
+      // Save to history
+      if (result.song != null) {
+        final historyItem = SearchHistory.fromSongModel(result.song);
+        await _historyService.saveSearch(historyItem);
+      }
+
+      if (!mounted) return;
+      Navigator.pushNamed(context, '/result', arguments: result);
+    } else {
+      // No match yet, keep recording
+      setState(() => _isProcessing = false);
+    }
+  }
+
+  Future<void> _stopRecordingAndRecognize() async {
     _stopTimer();
     final path = await _audioService.stopRecording();
     if (path == null) {
@@ -90,23 +183,44 @@ class _HomeScreenState extends State<HomeScreen> {
     final result = await _apiService.recognizeAudio(path);
     setState(() => _isProcessing = false);
     if (!mounted) return;
-    // Navigate to result screen as before
-    Navigator.pushReplacementNamed(context, '/result', arguments: result);
+
+    // Save to history if successful
+    if (result.success && result.song != null) {
+      final historyItem = SearchHistory.fromSongModel(result.song);
+      await _historyService.saveSearch(historyItem);
+    }
+
+    // Navigate to result screen
+    if (!mounted) return;
+    Navigator.pushNamed(context, '/result', arguments: result);
   }
 
   Future<void> _checkConnection() async {
+    if (!mounted) return;
     setState(() => _isChecking = true);
-    final connected = await _apiService.testConnection();
-    setState(() {
-      _isConnected = connected;
-      _isChecking = false;
-    });
+    try {
+      final connected = await _apiService.testConnection();
+      if (mounted) {
+        setState(() {
+          _isConnected = connected;
+          _isChecking = false;
+        });
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _isConnected = false;
+          _isChecking = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      drawer: const AppDrawer(),
       body: SafeArea(
         child: Stack(
           children: [
@@ -115,13 +229,20 @@ class _HomeScreenState extends State<HomeScreen> {
           padding: const EdgeInsets.all(24.0),
           child: Column(
             children: [
-              // Top Bar with App Name and Language Switcher
+              // Top Bar with Hamburger Menu, App Name and History Icon
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  Row(
                     children: [
+                      IconButton(
+                        icon: const Icon(Icons.menu, color: Colors.white70, size: 28),
+                        onPressed: () {
+                          Scaffold.of(context).openDrawer();
+                        },
+                        tooltip: 'Menu',
+                      ),
+                      const SizedBox(width: 8),
                       Text(
                         AppLocalizations.of(context)!.homeTitleShort,
                         style: GoogleFonts.plusJakartaSans(
@@ -130,33 +251,19 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.white,
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        AppLocalizations.of(context)!.homeTagline,
-                        style: GoogleFonts.plusJakartaSans(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          color: Colors.white70,
-                          letterSpacing: 0.5,
-                        ),
-                      ),
                     ],
                   ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.logout, color: Colors.white70),
-                        onPressed: () async {
-                          await AuthService().signOut();
-                          if (context.mounted) {
-                            Navigator.of(context).pushReplacementNamed('/');
-                          }
-                        },
-                        tooltip: 'Sign Out',
-                      ),
-                      const SizedBox(width: 8),
-                      _LanguageSwitcher(),
-                    ],
+                  IconButton(
+                    icon: const Icon(Icons.history, color: Colors.white70, size: 24),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const HistoryScreen(),
+                        ),
+                      );
+                    },
+                    tooltip: 'Search History',
                   ),
                 ],
               ),
@@ -170,19 +277,29 @@ class _HomeScreenState extends State<HomeScreen> {
                     
                     const SizedBox(height: 60),
                     
-                    // Main Text
-                    Text(
-                      _isProcessing
-                          ? AppLocalizations.of(context)!.recognizing
-                          : AppLocalizations.of(context)!.homeTapToIdentify,
-                      style: GoogleFonts.plusJakartaSans(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        letterSpacing: 1.2,
+                    // Main Text - hide during recording/processing
+                    if (!_isRecording && !_isProcessing)
+                      Text(
+                        AppLocalizations.of(context)!.homeTapToIdentify,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 1.2,
+                        ),
+                        textAlign: TextAlign.center,
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+                    if (_isProcessing)
+                      Text(
+                        AppLocalizations.of(context)!.recognizing,
+                        style: GoogleFonts.plusJakartaSans(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                          letterSpacing: 1.2,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
                     if (_isRecording)
                       Padding(
                         padding: const EdgeInsets.only(top: 12.0),
@@ -281,9 +398,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             width: 160,
             height: 160,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
-              gradient: const LinearGradient(
+              gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
@@ -293,12 +410,12 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: const Color(0xFF00E5FF).withOpacity(0.4),
+                  color: Color(0x6600E5FF), // 40% opacity
                   blurRadius: 40,
                   spreadRadius: 10,
                 ),
                 BoxShadow(
-                  color: const Color(0xFFFF6B9D).withOpacity(0.3),
+                  color: Color(0x4DFF6B9D), // 30% opacity
                   blurRadius: 60,
                   spreadRadius: 12,
                 ),
@@ -346,7 +463,7 @@ class _AnimatedEqualizerState extends State<_AnimatedEqualizer>
 
   @override
   Widget build(BuildContext context) {
-    final bars = 7;
+    const bars = 7;
     return SizedBox(
       width: 100,
       height: 60,
@@ -391,7 +508,7 @@ class _ScanlinesPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = Colors.white.withOpacity(0.02)
+      ..color = const Color(0x05FFFFFF) // 2% opacity
       ..strokeWidth = 1;
     const gap = 3.0;
     double y = 0;
@@ -403,103 +520,4 @@ class _ScanlinesPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
-}
-
-class _LanguageSwitcher extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final languageService = Provider.of<LanguageService>(context);
-    final currentLang = languageService.currentLocale.languageCode;
-
-    return PopupMenuButton<String>(
-      icon: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-        decoration: BoxDecoration(
-          color: const Color(0xFF00E5FF).withOpacity(0.15),
-          borderRadius: BorderRadius.circular(20),
-          border: Border.all(
-            color: const Color(0xFF00E5FF).withOpacity(0.5),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              languageService.getLanguageFlag(currentLang),
-              style: const TextStyle(fontSize: 16),
-            ),
-            const SizedBox(width: 6),
-            Text(
-              currentLang.toUpperCase(),
-              style: GoogleFonts.plusJakartaSans(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-                color: const Color(0xFF00E5FF),
-                letterSpacing: 0.5,
-              ),
-            ),
-            const SizedBox(width: 4),
-            const Icon(
-              Icons.arrow_drop_down,
-              color: Color(0xFF00E5FF),
-              size: 18,
-            ),
-          ],
-        ),
-      ),
-      color: const Color(0xFF1A1F2E),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: const Color(0xFF00E5FF).withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      itemBuilder: (context) => [
-        _buildLanguageMenuItem('en', languageService),
-        _buildLanguageMenuItem('tr', languageService),
-        _buildLanguageMenuItem('ja', languageService),
-      ],
-      onSelected: (languageCode) {
-        languageService.changeLanguage(languageCode);
-      },
-    );
-  }
-
-  PopupMenuItem<String> _buildLanguageMenuItem(
-    String code,
-    LanguageService languageService,
-  ) {
-    final isSelected = languageService.currentLocale.languageCode == code;
-
-    return PopupMenuItem<String>(
-      value: code,
-      child: Row(
-        children: [
-          Text(
-            languageService.getLanguageFlag(code),
-            style: const TextStyle(fontSize: 20),
-          ),
-          const SizedBox(width: 12),
-          Text(
-            languageService.getLanguageName(code),
-            style: GoogleFonts.plusJakartaSans(
-              fontSize: 14,
-              fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-              color: isSelected ? const Color(0xFF00E5FF) : Colors.white,
-            ),
-          ),
-          if (isSelected) ...[
-            const Spacer(),
-            const Icon(
-              Icons.check,
-              color: Color(0xFF00E5FF),
-              size: 18,
-            ),
-          ],
-        ],
-      ),
-    );
-  }
 }

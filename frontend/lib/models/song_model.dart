@@ -44,7 +44,11 @@ class SongModel {
 
   String? get youtubeVideoId {
     try {
-      return externalMetadata['youtube']?['vid'];
+      final vid = externalMetadata['youtube']?['vid'];
+      if (vid == null || vid.toString().isEmpty) {
+        return null;
+      }
+      return vid.toString();
     } catch (e) {
       return null;
     }
@@ -52,7 +56,11 @@ class SongModel {
 
   String? get spotifyTrackId {
     try {
-      return externalMetadata['spotify']?['track']?['id'];
+      final trackId = externalMetadata['spotify']?['track']?['id'];
+      if (trackId == null || trackId.toString().isEmpty) {
+        return null;
+      }
+      return trackId.toString();
     } catch (e) {
       return null;
     }
@@ -60,11 +68,19 @@ class SongModel {
 
   String? get youtubeUrl {
     final vid = youtubeVideoId;
-    return vid != null ? 'https://www.youtube.com/watch?v=$vid' : null;
+    if (vid == null || vid.isEmpty) {
+      return null;
+    }
+    final url = 'https://www.youtube.com/watch?v=$vid';
+    return url;
   }
 
   String? get spotifyUrl {
     final trackId = spotifyTrackId;
-    return trackId != null ? 'https://open.spotify.com/track/$trackId' : null;
+    if (trackId == null || trackId.isEmpty) {
+      return null;
+    }
+    final url = 'https://open.spotify.com/track/$trackId';
+    return url;
   }
 }

@@ -7,13 +7,17 @@ import 'screens/home_screen.dart';
 import 'screens/sign_in_screen.dart';
 import 'screens/result_screen.dart';
 import 'services/api_service.dart';
-import 'services/auth_service.dart';
 import 'services/language_service.dart';
+import 'widgets/auth_gate.dart';
 
-void main() async {
+void main() {
+  // Initialize Flutter bindings
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Create language service and initialize in background
   final languageService = LanguageService();
-  await languageService.initialize();
+  languageService.initialize();
+
   runApp(MyApp(languageService: languageService));
 }
 
@@ -53,7 +57,7 @@ class MyApp extends StatelessWidget {
               elevatedButtonTheme: ElevatedButtonThemeData(
                 style: ElevatedButton.styleFrom(
                   elevation: 8,
-                  shadowColor: const Color(0xFF00E5FF).withValues(alpha: 0.3),
+                  shadowColor: const Color(0x4D00E5FF), // 30% opacity
                 ),
               ),
             ),
@@ -68,7 +72,12 @@ class MyApp extends StatelessWidget {
               Locale('tr'),
               Locale('ja'),
             ],
+            // AuthGate checks if user is signed in or guest
             home: const AuthGate(),
+            routes: {
+              '/home': (context) => const HomeScreen(),
+              '/signin': (context) => const SignInScreen(),
+            },
             onGenerateRoute: (settings) {
               if (settings.name == '/result') {
                 final result = settings.arguments as RecognitionResult;
@@ -81,32 +90,6 @@ class MyApp extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-/// AuthGate checks if user is signed in and shows appropriate screen
-class AuthGate extends StatelessWidget {
-  const AuthGate({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return FutureBuilder<bool>(
-      future: AuthService().isSignedIn(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(
-                color: Color(0xFF00E5FF),
-              ),
-            ),
-          );
-        }
-
-        final isSignedIn = snapshot.data ?? false;
-        return isSignedIn ? const HomeScreen() : const SignInScreen();
-      },
     );
   }
 }

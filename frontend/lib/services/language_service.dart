@@ -10,10 +10,15 @@ class LanguageService extends ChangeNotifier {
 
   // Initialize and load saved language
   Future<void> initialize() async {
-    final prefs = await SharedPreferences.getInstance();
-    final languageCode = prefs.getString(_languageKey) ?? 'en';
-    _currentLocale = Locale(languageCode);
-    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final languageCode = prefs.getString(_languageKey) ?? 'en';
+      _currentLocale = Locale(languageCode);
+      notifyListeners();
+    } catch (e) {
+      // If initialization fails, keep default locale (en)
+      _currentLocale = const Locale('en');
+    }
   }
 
   // Change language and save preference
@@ -23,8 +28,12 @@ class LanguageService extends ChangeNotifier {
     _currentLocale = Locale(languageCode);
     notifyListeners();
 
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString(_languageKey, languageCode);
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString(_languageKey, languageCode);
+    } catch (e) {
+      // Silently fail if saving fails, but keep the locale changed in memory
+    }
   }
 
   // Get display name for language

@@ -15,10 +15,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get homeTitleShort => 'OtoKage';
 
   @override
-  String get homeTagline => 'Anime OP, ED ve Oyun Müziklerini Tanı';
+  String get homeTagline => 'Şarkıyı aramak için dokunun';
 
   @override
-  String get homeTapToIdentify => 'Anime OP/ED veya Oyun OST\'sini tanımlamak için dokunun';
+  String get homeTapToIdentify => 'Şarkıyı aramak için dokunun';
 
   @override
   String get cannotConnect => 'Sunucuya bağlanılamıyor';
@@ -76,4 +76,114 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get tryAgain => 'Tekrar deneyin';
+
+  @override
+  String get historyTitle => 'Arama Geçmişi';
+
+  @override
+  String get historyEmpty => 'Henüz arama geçmişi yok';
+
+  @override
+  String get historyEmptyHint => 'Tanınan şarkılarınız burada görünecek';
+
+  @override
+  String get historyClearConfirm => 'Geçmişi temizle?';
+
+  @override
+  String get historyClearMessage => 'Bu, tüm arama geçmişinizi silecektir. Bu işlem geri alınamaz.';
+
+  @override
+  String get historyCancel => 'İptal';
+
+  @override
+  String get historyClear => 'Temizle';
+
+  @override
+  String get historyGuestSync => 'Geçmişi tüm cihazlarda kaydetmek için giriş yapın';
+
+  @override
+  String get historyGuestLocal => 'Misafir olarak geçmişiniz yalnızca yerel olarak saklanır';
+
+  @override
+  String get historyGuestBanner => 'Geçmişinizi tüm cihazlarda senkronize etmek için giriş yapın';
+
+  @override
+  String get continueWithGoogle => 'Google ile devam et';
+
+  @override
+  String get continueWithEmail => 'E-posta ile devam et';
+
+  @override
+  String get continueAsGuest => 'Misafir olarak devam et';
+
+  @override
+  String matchScore(int score) {
+    return 'Eşleşme: %$score';
+  }
+
+  @override
+  String get signInFailed => 'Giriş başarısız';
+
+  @override
+  String get email => 'E-posta';
+
+  @override
+  String get password => 'Şifre';
+
+  @override
+  String get settings => 'Ayarlar';
+
+  @override
+  String get account => 'Hesap';
+
+  @override
+  String get profile => 'Profil';
+
+  @override
+  String get guestUser => 'Misafir Kullanıcı';
+
+  @override
+  String get deleteAccount => 'Hesabı Sil';
+
+  @override
+  String get deleteAccountConfirm => 'Hesap Silinsin mi?';
+
+  @override
+  String get deleteAccountWarning => 'Bu, hesabınızı ve arama geçmişi dahil tüm ilişkili verileri kalıcı olarak silecektir. Bu işlem geri alınamaz.';
+
+  @override
+  String get deleteAccountSuccess => 'Hesap başarıyla silindi';
+
+  @override
+  String get deleteAccountFailed => 'Hesap silinemedi. Lütfen tekrar deneyin.';
+
+  @override
+  String get cancel => 'İptal';
+
+  @override
+  String get delete => 'Sil';
+
+  @override
+  String get privacyPolicy => 'Gizlilik Politikası';
+
+  @override
+  String get termsOfService => 'Hizmet Şartları';
+
+  @override
+  String get about => 'Hakkında';
+
+  @override
+  String get version => 'Sürüm';
+
+  @override
+  String get contactUs => 'Bize Ulaşın';
+
+  @override
+  String get accountSettings => 'Hesap Ayarları';
+
+  @override
+  String get privacyAndLegal => 'Gizlilik ve Yasal';
+
+  @override
+  String get signedInAs => 'Giriş yapıldı:';
 }

@@ -1,8 +1,8 @@
 {
   "appTitle": "オトカゲ：アニメ音楽ファインダー",
   "homeTitleShort": "OtoKage",
-  "homeTagline": "アニメOP・ED・ゲームOSTを識別",
-  "homeTapToIdentify": "タップしてアニメOP/EDまたはゲームOSTを識別",
+  "homeTagline": "タップして曲を検索",
+  "homeTapToIdentify": "タップして曲を検索",
   "cannotConnect": "サーバーに接続できません",
   "retry": "再試行",
   "recordHeader": "OP/OSTを録音",
@@ -21,5 +21,48 @@
   "tip2": "メロディーをできるだけ正確に合わせてください",
   "tip3": "静かな環境で録音してください",
   "tip4": "人気のあるアニメOP/EDまたはゲームテーマを試してください",
-  "tryAgain": "再試行"
+  "tryAgain": "再試行",
+  "historyTitle": "検索履歴",
+  "historyEmpty": "検索履歴がまだありません",
+  "historyEmptyHint": "認識された曲がここに表示されます",
+  "historyClearConfirm": "履歴をクリア？",
+  "historyClearMessage": "すべての検索履歴が削除されます。この操作は元に戻せません。",
+  "historyCancel": "キャンセル",
+  "historyClear": "クリア",
+  "historyGuestSync": "サインインしてすべてのデバイスで履歴を保存",
+  "historyGuestLocal": "ゲストとして、履歴はローカルのみに保存されます",
+  "historyGuestBanner": "サインインしてすべてのデバイスで履歴を同期",
+  "continueWithGoogle": "Googleで続ける",
+  "continueWithEmail": "メールで続ける",
+  "continueAsGuest": "ゲストとして続ける",
+  "matchScore": "一致度：{score}%",
+  "@matchScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "signInFailed": "サインイン失敗",
+  "email": "メール",
+  "password": "パスワード",
+  "settings": "設定",
+  "account": "アカウント",
+  "profile": "プロフィール",
+  "guestUser": "ゲストユーザー",
+  "deleteAccount": "アカウント削除",
+  "deleteAccountConfirm": "アカウントを削除しますか？",
+  "deleteAccountWarning": "これにより、アカウントと検索履歴を含むすべての関連データが完全に削除されます。この操作は元に戻せません。",
+  "deleteAccountSuccess": "アカウントが正常に削除されました",
+  "deleteAccountFailed": "アカウントの削除に失敗しました。もう一度お試しください。",
+  "cancel": "キャンセル",
+  "delete": "削除",
+  "privacyPolicy": "プライバシーポリシー",
+  "termsOfService": "利用規約",
+  "about": "について",
+  "version": "バージョン",
+  "contactUs": "お問い合わせ",
+  "accountSettings": "アカウント設定",
+  "privacyAndLegal": "プライバシーと法的事項",
+  "signedInAs": "サインイン："
 }

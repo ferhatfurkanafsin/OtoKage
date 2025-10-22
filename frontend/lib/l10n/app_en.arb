@@ -1,8 +1,8 @@
 {
   "appTitle": "OtoKage: Anime Music Finder",
   "homeTitleShort": "OtoKage",
-  "homeTagline": "Identify Anime OPs, EDs & Game OSTs",
-  "homeTapToIdentify": "Tap to identify Anime OP/ED or Game OST",
+  "homeTagline": "Tap to search the song",
+  "homeTapToIdentify": "Tap to search the song",
   "cannotConnect": "Cannot connect to server",
   "retry": "Retry",
   "recordHeader": "Record your OP/OST",
@@ -21,6 +21,49 @@
   "tip2": "Try to match the melody as closely as possible",
   "tip3": "Record in a quiet environment",
   "tip4": "Try a popular anime OP/ED or game theme",
-  "tryAgain": "Try Again"
+  "tryAgain": "Try Again",
+  "historyTitle": "Search History",
+  "historyEmpty": "No search history yet",
+  "historyEmptyHint": "Your recognized songs will appear here",
+  "historyClearConfirm": "Clear History?",
+  "historyClearMessage": "This will delete all your search history. This action cannot be undone.",
+  "historyCancel": "Cancel",
+  "historyClear": "Clear",
+  "historyGuestSync": "Sign in to save history across devices",
+  "historyGuestLocal": "As a guest, your history is only stored locally",
+  "historyGuestBanner": "Sign in to sync your history across devices",
+  "continueWithGoogle": "Continue with Google",
+  "continueWithEmail": "Continue with Email",
+  "continueAsGuest": "Continue as Guest",
+  "matchScore": "Match: {score}%",
+  "@matchScore": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "signInFailed": "Sign-in failed",
+  "email": "Email",
+  "password": "Password",
+  "settings": "Settings",
+  "account": "Account",
+  "profile": "Profile",
+  "guestUser": "Guest User",
+  "deleteAccount": "Delete Account",
+  "deleteAccountConfirm": "Delete Account?",
+  "deleteAccountWarning": "This will permanently delete your account and all associated data including search history. This action cannot be undone.",
+  "deleteAccountSuccess": "Account deleted successfully",
+  "deleteAccountFailed": "Failed to delete account. Please try again.",
+  "cancel": "Cancel",
+  "delete": "Delete",
+  "privacyPolicy": "Privacy Policy",
+  "termsOfService": "Terms of Service",
+  "about": "About",
+  "version": "Version",
+  "contactUs": "Contact Us",
+  "accountSettings": "Account Settings",
+  "privacyAndLegal": "Privacy & Legal",
+  "signedInAs": "Signed in as"
 }
 

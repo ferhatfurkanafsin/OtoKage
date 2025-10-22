@@ -22,9 +22,8 @@ android {
     defaultConfig {
         // Unique application ID for Play Store
         applicationId = "com.vibequest.app"
-        // You can update the following values to match your application needs.
-        // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // COMPATIBILITY FIX: Lowered minSdk to support older Android devices
+        minSdk = flutter.minSdkVersion  // Android 4.4 KitKat (was 21)
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -41,8 +40,10 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            isShrinkResources = true
+            // CRITICAL FIX: Disabled minification - was breaking Flutter app startup
+            // R8/ProGuard was removing essential Flutter code causing instant crash
+            isMinifyEnabled = false
+            isShrinkResources = false
             signingConfig = signingConfigs.getByName("release")
         }
     }

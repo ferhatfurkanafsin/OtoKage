@@ -1,7 +1,7 @@
 name: frontend
 description: "OtoKage: Anime Music Recognition"
 publish_to: 'none'
-version: 1.0.0+1
+version: 1.3.0+3
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -30,7 +30,7 @@ dependencies:
   # URL Launcher
   url_launcher: ^6.2.2
   
-  # Google Fonts
+  # Google Fonts & Auth
   google_fonts: ^6.1.0
   google_sign_in: ^6.2.1
   shared_preferences: ^2.2.2
@@ -49,6 +49,8 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   generate: true
+  assets:
+    - assets/
 
 flutter_native_splash:
   color: "#0B0D14"

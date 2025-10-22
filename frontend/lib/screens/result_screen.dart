@@ -9,10 +9,43 @@ class ResultScreen extends StatelessWidget {
 
   const ResultScreen({super.key, required this.result});
 
-  Future<void> _launchUrl(String url) async {
-    final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+  Future<void> _launchUrl(BuildContext context, String url, String platform) async {
+    try {
+      final uri = Uri.parse(url);
+
+      // Check if URL can be launched
+      final canLaunch = await canLaunchUrl(uri);
+
+      if (canLaunch) {
+        // Try external application mode first
+        final launched = await launchUrl(
+          uri,
+          mode: LaunchMode.externalApplication,
+        );
+
+        if (!launched) {
+          // Try platform default mode as fallback
+          await launchUrl(uri, mode: LaunchMode.platformDefault);
+        }
+      } else {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Cannot open $platform. Please install the $platform app.'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to open $platform: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     }
   }
 
@@ -20,8 +53,8 @@ class ResultScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
@@ -99,10 +132,10 @@ class ResultScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: const Color(0x1AFFFFFF), // 10% opacity
               borderRadius: BorderRadius.circular(20),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: const Color(0x33FFFFFF), // 20% opacity
                 width: 1,
               ),
             ),
@@ -195,7 +228,7 @@ class ResultScreen extends StatelessWidget {
                     const Icon(Icons.star, color: Colors.amber, size: 20),
                     const SizedBox(width: 8),
                     Text(
-                      'Match: ${song.score}%',
+                      AppLocalizations.of(context)!.matchScore(song.score),
                       style: const TextStyle(
                         color: Colors.white70,
                         fontSize: 16,
@@ -228,7 +261,7 @@ class ResultScreen extends StatelessWidget {
                     if (song.youtubeUrl != null)
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: () => _launchUrl(song.youtubeUrl!),
+                          onPressed: () => _launchUrl(context, song.youtubeUrl!, 'YouTube'),
                           icon: const Icon(Icons.play_circle_fill),
                           label: const Text('YouTube'),
                           style: ElevatedButton.styleFrom(
@@ -241,14 +274,14 @@ class ResultScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                    
+
                     if (song.youtubeUrl != null && song.spotifyUrl != null)
                       const SizedBox(width: 16),
-                    
+
                     if (song.spotifyUrl != null)
                       Expanded(
                         child: ElevatedButton.icon(
-                          onPressed: () => _launchUrl(song.spotifyUrl!),
+                          onPressed: () => _launchUrl(context, song.spotifyUrl!, 'Spotify'),
                           icon: const Icon(Icons.music_note),
                           label: const Text('Spotify'),
                           style: ElevatedButton.styleFrom(
@@ -335,10 +368,10 @@ class ResultScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(20),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.1),
+              color: const Color(0x1AFFFFFF), // 10% opacity
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: Colors.white.withOpacity(0.2),
+                color: const Color(0x33FFFFFF), // 20% opacity
                 width: 1,
               ),
             ),

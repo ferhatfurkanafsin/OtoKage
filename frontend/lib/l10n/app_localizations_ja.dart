@@ -15,10 +15,10 @@ class AppLocalizationsJa extends AppLocalizations {
   String get homeTitleShort => 'OtoKage';
 
   @override
-  String get homeTagline => 'アニメOP・ED・ゲームOSTを識別';
+  String get homeTagline => 'タップして曲を検索';
 
   @override
-  String get homeTapToIdentify => 'タップしてアニメOP/EDまたはゲームOSTを識別';
+  String get homeTapToIdentify => 'タップして曲を検索';
 
   @override
   String get cannotConnect => 'サーバーに接続できません';
@@ -76,4 +76,114 @@ class AppLocalizationsJa extends AppLocalizations {
 
   @override
   String get tryAgain => '再試行';
+
+  @override
+  String get historyTitle => '検索履歴';
+
+  @override
+  String get historyEmpty => '検索履歴がまだありません';
+
+  @override
+  String get historyEmptyHint => '認識された曲がここに表示されます';
+
+  @override
+  String get historyClearConfirm => '履歴をクリア？';
+
+  @override
+  String get historyClearMessage => 'すべての検索履歴が削除されます。この操作は元に戻せません。';
+
+  @override
+  String get historyCancel => 'キャンセル';
+
+  @override
+  String get historyClear => 'クリア';
+
+  @override
+  String get historyGuestSync => 'サインインしてすべてのデバイスで履歴を保存';
+
+  @override
+  String get historyGuestLocal => 'ゲストとして、履歴はローカルのみに保存されます';
+
+  @override
+  String get historyGuestBanner => 'サインインしてすべてのデバイスで履歴を同期';
+
+  @override
+  String get continueWithGoogle => 'Googleで続ける';
+
+  @override
+  String get continueWithEmail => 'メールで続ける';
+
+  @override
+  String get continueAsGuest => 'ゲストとして続ける';
+
+  @override
+  String matchScore(int score) {
+    return '一致度：$score%';
+  }
+
+  @override
+  String get signInFailed => 'サインイン失敗';
+
+  @override
+  String get email => 'メール';
+
+  @override
+  String get password => 'パスワード';
+
+  @override
+  String get settings => '設定';
+
+  @override
+  String get account => 'アカウント';
+
+  @override
+  String get profile => 'プロフィール';
+
+  @override
+  String get guestUser => 'ゲストユーザー';
+
+  @override
+  String get deleteAccount => 'アカウント削除';
+
+  @override
+  String get deleteAccountConfirm => 'アカウントを削除しますか？';
+
+  @override
+  String get deleteAccountWarning => 'これにより、アカウントと検索履歴を含むすべての関連データが完全に削除されます。この操作は元に戻せません。';
+
+  @override
+  String get deleteAccountSuccess => 'アカウントが正常に削除されました';
+
+  @override
+  String get deleteAccountFailed => 'アカウントの削除に失敗しました。もう一度お試しください。';
+
+  @override
+  String get cancel => 'キャンセル';
+
+  @override
+  String get delete => '削除';
+
+  @override
+  String get privacyPolicy => 'プライバシーポリシー';
+
+  @override
+  String get termsOfService => '利用規約';
+
+  @override
+  String get about => 'について';
+
+  @override
+  String get version => 'バージョン';
+
+  @override
+  String get contactUs => 'お問い合わせ';
+
+  @override
+  String get accountSettings => 'アカウント設定';
+
+  @override
+  String get privacyAndLegal => 'プライバシーと法的事項';
+
+  @override
+  String get signedInAs => 'サインイン：';
 }

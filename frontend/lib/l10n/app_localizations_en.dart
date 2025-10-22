@@ -15,10 +15,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get homeTitleShort => 'OtoKage';
 
   @override
-  String get homeTagline => 'Identify Anime OPs, EDs & Game OSTs';
+  String get homeTagline => 'Tap to search the song';
 
   @override
-  String get homeTapToIdentify => 'Tap to identify Anime OP/ED or Game OST';
+  String get homeTapToIdentify => 'Tap to search the song';
 
   @override
   String get cannotConnect => 'Cannot connect to server';
@@ -76,4 +76,114 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get tryAgain => 'Try Again';
+
+  @override
+  String get historyTitle => 'Search History';
+
+  @override
+  String get historyEmpty => 'No search history yet';
+
+  @override
+  String get historyEmptyHint => 'Your recognized songs will appear here';
+
+  @override
+  String get historyClearConfirm => 'Clear History?';
+
+  @override
+  String get historyClearMessage => 'This will delete all your search history. This action cannot be undone.';
+
+  @override
+  String get historyCancel => 'Cancel';
+
+  @override
+  String get historyClear => 'Clear';
+
+  @override
+  String get historyGuestSync => 'Sign in to save history across devices';
+
+  @override
+  String get historyGuestLocal => 'As a guest, your history is only stored locally';
+
+  @override
+  String get historyGuestBanner => 'Sign in to sync your history across devices';
+
+  @override
+  String get continueWithGoogle => 'Continue with Google';
+
+  @override
+  String get continueWithEmail => 'Continue with Email';
+
+  @override
+  String get continueAsGuest => 'Continue as Guest';
+
+  @override
+  String matchScore(int score) {
+    return 'Match: $score%';
+  }
+
+  @override
+  String get signInFailed => 'Sign-in failed';
+
+  @override
+  String get email => 'Email';
+
+  @override
+  String get password => 'Password';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get guestUser => 'Guest User';
+
+  @override
+  String get deleteAccount => 'Delete Account';
+
+  @override
+  String get deleteAccountConfirm => 'Delete Account?';
+
+  @override
+  String get deleteAccountWarning => 'This will permanently delete your account and all associated data including search history. This action cannot be undone.';
+
+  @override
+  String get deleteAccountSuccess => 'Account deleted successfully';
+
+  @override
+  String get deleteAccountFailed => 'Failed to delete account. Please try again.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get privacyPolicy => 'Privacy Policy';
+
+  @override
+  String get termsOfService => 'Terms of Service';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get contactUs => 'Contact Us';
+
+  @override
+  String get accountSettings => 'Account Settings';
+
+  @override
+  String get privacyAndLegal => 'Privacy & Legal';
+
+  @override
+  String get signedInAs => 'Signed in as';
 }

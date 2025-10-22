@@ -132,8 +132,8 @@ class _RecordingScreenState extends State<RecordingScreen>
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [
@@ -191,8 +191,8 @@ class _RecordingScreenState extends State<RecordingScreen>
                     const SizedBox(height: 8),
                     Text(
                       AppLocalizations.of(context)!.recognizingHint,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
+                      style: const TextStyle(
+                        color: Color(0xB3FFFFFF), // 70% opacity
                         fontSize: 16,
                       ),
                     ),
@@ -209,13 +209,15 @@ class _RecordingScreenState extends State<RecordingScreen>
                           height: 200,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(0.1),
+                            color: const Color(0x1AFFFFFF), // 10% opacity
                             boxShadow: _isRecording
                                 ? [
                                     BoxShadow(
-                                      color: Colors.red.withOpacity(
-                                        0.5 * _animationController.value,
-                                      ),
+                                      color: Color.lerp(
+                                        const Color(0x00FF0000),
+                                        const Color(0x80FF0000),
+                                        _animationController.value,
+                                      )!,
                                       blurRadius: 40,
                                       spreadRadius: 20,
                                     ),
@@ -249,8 +251,8 @@ class _RecordingScreenState extends State<RecordingScreen>
                       _isRecording
                           ? AppLocalizations.of(context)!.recording
                           : AppLocalizations.of(context)!.tapToStart,
-                      style: TextStyle(
-                        color: Colors.white.withOpacity(0.7),
+                      style: const TextStyle(
+                        color: Color(0xB3FFFFFF), // 70% opacity
                         fontSize: 18,
                       ),
                     ),
@@ -270,9 +272,9 @@ class _RecordingScreenState extends State<RecordingScreen>
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         color: _isRecording ? Colors.red : Colors.white,
-                        boxShadow: [
+                        boxShadow: const [
                           BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
+                            color: Color(0x4D000000), // 30% opacity
                             blurRadius: 20,
                             spreadRadius: 5,
                           ),
@@ -292,8 +294,8 @@ class _RecordingScreenState extends State<RecordingScreen>
                   padding: const EdgeInsets.symmetric(horizontal: 32.0),
                   child: Text(
                     AppLocalizations.of(context)!.minRecordingHint,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.5),
+                    style: const TextStyle(
+                      color: Color(0x80FFFFFF), // 50% opacity
                       fontSize: 14,
                     ),
                     textAlign: TextAlign.center,

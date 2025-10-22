@@ -21,10 +21,12 @@ class _SignInScreenState extends State<SignInScreen> {
     if (mounted) {
       setState(() => _loading = false);
       if (ok) {
-        Navigator.of(context).pushReplacementNamed('/');
+        // Navigate to home screen
+        Navigator.of(context).pushReplacementNamed('/home');
       } else {
+        final t = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sign-in failed')),
+          SnackBar(content: Text(t.signInFailed)),
         );
       }
     }
@@ -49,66 +51,62 @@ class _SignInScreenState extends State<SignInScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 24),
+                // App title only (no tagline)
                 Text(
                   t.homeTitleShort,
                   style: const TextStyle(
                     color: Colors.white,
-                    fontSize: 28,
+                    fontSize: 32,
                     fontWeight: FontWeight.bold,
+                    letterSpacing: 1.2,
                   ),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  t.homeTagline,
-                  style: const TextStyle(color: Colors.white70),
                 ),
                 const Spacer(),
-                ElevatedButton.icon(
-                  onPressed: _loading
-                      ? null
-                      : () => _withLoader(_auth.signInWithGoogle),
-                  icon: const Icon(Icons.login),
-                  label: const Text('Continue with Google'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: const Color(0xFF0B0D14),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                  ),
-                ),
-                const SizedBox(height: 16),
+
+                // Email/Password input container
                 Container(
                   decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(0.08),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.white24),
+                    color: const Color(0x1400E5FF), // 8% opacity
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: const Color(0x3300E5FF), // 20% opacity cyan
+                      width: 1.5,
+                    ),
                   ),
-                  padding: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(20),
                   child: Column(
                     children: [
                       TextField(
                         controller: _email,
-                        decoration: const InputDecoration(
-                          hintText: 'Email',
-                          hintStyle: TextStyle(color: Colors.white54),
+                        decoration: InputDecoration(
+                          hintText: t.email,
+                          hintStyle: const TextStyle(color: Colors.white54),
                           border: InputBorder.none,
+                          prefixIcon: const Icon(Icons.email_outlined, color: Color(0xFF00E5FF)),
                         ),
                         style: const TextStyle(color: Colors.white),
+                        keyboardType: TextInputType.emailAddress,
                       ),
-                      const Divider(color: Colors.white24),
+                      const Divider(color: Colors.white24, height: 1),
+                      const SizedBox(height: 12),
                       TextField(
                         controller: _password,
                         obscureText: true,
-                        decoration: const InputDecoration(
-                          hintText: 'Password',
-                          hintStyle: TextStyle(color: Colors.white54),
+                        decoration: InputDecoration(
+                          hintText: t.password,
+                          hintStyle: const TextStyle(color: Colors.white54),
                           border: InputBorder.none,
+                          prefixIcon: const Icon(Icons.lock_outline, color: Color(0xFF00E5FF)),
                         ),
                         style: const TextStyle(color: Colors.white),
                       ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 12),
+
+                const SizedBox(height: 16),
+
+                // Continue with Email button
                 FilledButton(
                   onPressed: _loading
                       ? null
@@ -121,10 +119,67 @@ class _SignInScreenState extends State<SignInScreen> {
                   style: FilledButton.styleFrom(
                     backgroundColor: const Color(0xFF00E5FF),
                     foregroundColor: const Color(0xFF0B0D14),
-                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 0,
                   ),
-                  child: const Text('Continue with email'),
+                  child: Text(
+                    t.continueWithEmail,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
+
+                const SizedBox(height: 16),
+
+                // Continue with Google button (icon + text)
+                OutlinedButton.icon(
+                  onPressed: _loading
+                      ? null
+                      : () => _withLoader(_auth.signInWithGoogle),
+                  icon: const Icon(Icons.account_circle, size: 24),
+                  label: Text(t.continueWithGoogle),
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    side: const BorderSide(color: Colors.white24, width: 1.5),
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 32),
+
+                // Continue as Guest button
+                TextButton(
+                  onPressed: _loading
+                      ? null
+                      : () async {
+                          final navigator = Navigator.of(context);
+                          setState(() => _loading = true);
+                          final ok = await _auth.continueAsGuest();
+                          if (!mounted) return;
+                          setState(() => _loading = false);
+                          if (ok) {
+                            navigator.pushReplacementNamed('/home');
+                          }
+                        },
+                  child: Text(
+                    t.continueAsGuest,
+                    style: TextStyle(
+                      color: Colors.grey.shade500,
+                      fontSize: 14,
+                      decoration: TextDecoration.underline,
+                      decorationColor: Colors.grey.shade500,
+                    ),
+                  ),
+                ),
+
                 const Spacer(),
               ],
             ),

@@ -12,31 +12,11 @@ class ApiService {
     ),
   );
 
-  ApiService() {
-    _dio.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) {
-          print('📤 REQUEST: ${options.method} ${options.path}');
-          return handler.next(options);
-        },
-        onResponse: (response, handler) {
-          print('📥 RESPONSE: ${response.statusCode} ${response.requestOptions.path}');
-          return handler.next(response);
-        },
-        onError: (error, handler) {
-          print('❌ ERROR: ${error.message}');
-          return handler.next(error);
-        },
-      ),
-    );
-  }
-
   Future<bool> testConnection() async {
     try {
       final response = await _dio.get('/');
       return response.statusCode == 200;
     } catch (e) {
-      print('Connection test failed: $e');
       return false;
     }
   }
@@ -98,6 +78,15 @@ class ApiService {
         success: false,
         message: 'Error: $e',
       );
+    }
+  }
+
+  Future<bool> deleteAccount(String email) async {
+    try {
+      final response = await _dio.delete('/account/$email');
+      return response.statusCode == 200 && response.data['success'] == true;
+    } catch (e) {
+      return false;
     }
   }
 }

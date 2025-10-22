@@ -40,12 +40,12 @@ void main() {
   img.compositeImage(canvas, badge, dstX: (size - badge.width) ~/ 2, dstY: (size - badge.height) ~/ 2, dstW: badge.width, dstH: badge.height);
 
   // White equalizer bars
-  final barCount = 7;
-  final barWidth = 50;
-  final gap = 30;
-  final totalWidth = barCount * barWidth + (barCount - 1) * gap;
+  const barCount = 7;
+  const barWidth = 50;
+  const gap = 30;
+  const totalWidth = barCount * barWidth + (barCount - 1) * gap;
   int startX = (size - totalWidth) ~/ 2;
-  final centerY = size ~/ 2;
+  const centerY = size ~/ 2;
   final heights = [0.25, 0.45, 0.7, 0.85, 0.7, 0.45, 0.25];
   for (int i = 0; i < barCount; i++) {
     final h = (heights[i] * 380).toInt();
